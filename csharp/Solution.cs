@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using csharp.Event;
 using csharp.Proposal;
 
@@ -9,10 +11,20 @@ namespace csharp
   {
     public static List<Event.Event> ProcessedEvents;
     public static List<Proposal.Proposal> ReceivedProposals;
-    public static string ProcessMessages(string[] inputLines)
+    public static List<Proposal.Proposal> ValidProposals;
+    
+    public static string Solve(string[] inputLines)
+    {
+      ProcessMessages(inputLines);
+      ComputeValid();
+      return Solution.FormatOutput();
+    }
+    
+    public static void ProcessMessages(string[] inputLines)
     {
       ProcessedEvents = new List<Event.Event>();
       ReceivedProposals = new List<Proposal.Proposal>();
+      ValidProposals = new List<Proposal.Proposal>();
       foreach (var inputLine in inputLines)
       {
         // Parse message
@@ -28,22 +40,29 @@ namespace csharp
           ProcessEvent(currentEvent);
         }
       }
+    }
 
-      var validProposals = new List<Proposal.Proposal>();
-      foreach (var proposal in ReceivedProposals)
-      {
-        if (ProposalSpecification.IsValid(proposal))
-          validProposals.Add(proposal);
-      }
-
+    public static string FormatOutput()
+    {
       var output = "";
-
-      foreach (var proposal in validProposals)
+      
+      foreach (var proposal in ValidProposals)
       {
         output += proposal.Id + ",";
       }
+      
+      output.TrimEnd(',');
 
-      return output.TrimEnd(',');
+      return output;
+    }
+
+    public static void ComputeValid()
+    {
+      foreach (var proposal in ReceivedProposals)
+      {
+        if (ProposalSpecification.IsValid(proposal))
+          ValidProposals.Add(proposal);
+      }
     }
 
     private static void ProcessEvent(Event.Event currentEvent)

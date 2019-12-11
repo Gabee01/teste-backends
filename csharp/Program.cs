@@ -48,11 +48,11 @@ namespace csharp
             var inputLines = File.ReadAllLines(inputPath);
             var outputLines = File.ReadAllLines(outputPath);
 
-            var result = Solution.ProcessMessages(inputLines);
+            var output = Solution.Solve(inputLines);
             
-            Console.WriteLine(result.Equals(outputLines[0])
+            Console.WriteLine(output.Equals(outputLines[0])
               ? $"Test {i + 1}/{outputFiles.Length} - Passed"
-              : $"Test {i + 1}/{outputFiles.Length} - Failed\n expected: {outputLines[0]}\n result: {result}");
+              : $"Test {i + 1}/{outputFiles.Length} - Failed\n expected: {outputLines[0]}\n result: {output}");
           }
         }
     }
