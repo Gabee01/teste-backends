@@ -10,6 +10,7 @@ namespace csharp
   public static class Solution
   {
     public static List<Event.Event> ProcessedEvents;
+    public static List<Event.Event> DiscardedEvents;
     public static List<Proposal.Proposal> ReceivedProposals;
     public static List<Proposal.Proposal> ValidProposals;
     
@@ -17,14 +18,16 @@ namespace csharp
     {
       ProcessMessages(inputLines);
       ComputeValid();
-      return Solution.FormatOutput();
+      return FormatOutput();
     }
     
     public static void ProcessMessages(string[] inputLines)
     {
       ProcessedEvents = new List<Event.Event>();
+      DiscardedEvents = new List<Event.Event>();
       ReceivedProposals = new List<Proposal.Proposal>();
       ValidProposals = new List<Proposal.Proposal>();
+      
       foreach (var inputLine in inputLines)
       {
         // Parse message
@@ -39,6 +42,10 @@ namespace csharp
 
           ProcessEvent(currentEvent);
         }
+        else
+        {
+          DiscardedEvents.Add(currentEvent);
+        }
       }
     }
 
@@ -51,9 +58,7 @@ namespace csharp
         output += proposal.Id + ",";
       }
       
-      output.TrimEnd(',');
-
-      return output;
+      return output.TrimEnd(',');
     }
 
     public static void ComputeValid()

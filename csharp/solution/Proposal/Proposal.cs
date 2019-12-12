@@ -66,7 +66,7 @@ namespace csharp.Proposal
     public void UpdateProponent(string[] currentEventPayload)
     {
       var proponentId = currentEventPayload[1];
-      var proponentIndex = Warranties.FindIndex(proposal => proposal.Id == proponentId);
+      var proponentIndex = Proponents.FindIndex(proposal => proposal.Id == proponentId);
 
       Proponents[proponentIndex] = new Proponent(currentEventPayload);
     }
