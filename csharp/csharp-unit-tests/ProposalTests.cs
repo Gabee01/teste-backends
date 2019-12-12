@@ -17,7 +17,17 @@ namespace csharp_unit_tests
       _proposal = new Proposal(new[]{"7eaa49ac-f52b-49e3-9e07-6501d0f28c30","462510.0","24"});
       _validProposal = new Proposal(new []{"7eaa49ac-f52b-49e3-9e07-6501d0f28c30","462510.0","24"});
     }
-    
+
+    [Theory]
+    [InlineData("test/input/failing.txt","test/output/failing.txt")]
+    [InlineData("test/input/fixed.txt","test/output/fixed.txt")]
+    public void ShouldValidateProposals(string inputFileName, string outputFileName){
+      var inputLines = File.ReadAllLines(inputFileName);
+      var outputLines = File.ReadAllLines(outputFileName);
+      var output = Solution.Solve(inputLines);
+      output.Should().Be(outputLines[0]);
+    }
+
     [Theory]
     [InlineData("test/input/failing.txt", 1)]
     [InlineData("test/input/fixed.txt", 0)]
@@ -28,7 +38,8 @@ namespace csharp_unit_tests
 
       Solution.DiscardedEvents.Count.Should().Be(duplicateEventsCount);
     }
-    
+
+
     [Fact]
     public void ShouldAddProponent()
     {
