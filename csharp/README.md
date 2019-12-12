@@ -3,7 +3,7 @@ Criei um docker-compose para facilitar a execução do código e dos testes unit
 
 Os testes de 1 à 12 estão passando normalmente.
 
-O teste numero 13 possui uma inconsistencia com a especificação, a saída da solução apresentada indica que a proposta `89892de7-06fa-4c52-880b-6d9e1ddc951e é valida, enquanto na saida esperada, a mesma é considerada invalida.
+O teste numero 13 possui uma inconsistencia com a especificação, a saída da solução apresentada indica que a proposta `89892de7-06fa-4c52-880b-6d9e1ddc951e` é valida, enquanto na saida esperada, a mesma é considerada invalida.
 
 Isso acontece devido ao evento com id duplicado: `5b924f17-f2a9-4bdf-97da-b57a4f49c615`
 
