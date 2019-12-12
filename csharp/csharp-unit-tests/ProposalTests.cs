@@ -1,4 +1,6 @@
+using System.IO;
 using System.Linq;
+using csharp;
 using csharp.Proposal;
 using FluentAssertions;
 using Xunit;
@@ -8,13 +10,23 @@ namespace csharp_unit_tests
   public class ProposalTests
   {
     private Proposal _proposal { get; set; }
-    
     private Proposal _validProposal { get; set; }
 
     public ProposalTests()
     {
       _proposal = new Proposal(new[]{"7eaa49ac-f52b-49e3-9e07-6501d0f28c30","462510.0","24"});
       _validProposal = new Proposal(new []{"7eaa49ac-f52b-49e3-9e07-6501d0f28c30","462510.0","24"});
+    }
+    
+    [Theory]
+    [InlineData("test/input/failing.txt", 1)]
+    [InlineData("test/input/fixed.txt", 0)]
+    public void ShouldDiscardDuplicates(string inputFileName, int duplicateEventsCount)
+    {
+      var inputLines = File.ReadAllLines(inputFileName);
+      Solution.ProcessMessages(inputLines);
+
+      Solution.DiscardedEvents.Count.Should().Be(duplicateEventsCount);
     }
     
     [Fact]
