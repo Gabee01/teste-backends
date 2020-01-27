@@ -1,0 +1,13 @@
+{application,loan_analysis,
+             [{applications,[kernel,stdlib,elixir,logger]},
+              {description,"loan_analysis"},
+              {modules,['Elixir.LoanAnalysis',
+                        'Elixir.LoanAnalysis.Application',
+                        'Elixir.LoanAnalysis.Event',
+                        'Elixir.LoanAnalysis.Proponent',
+                        'Elixir.LoanAnalysis.Proposal',
+                        'Elixir.LoanAnalysis.Proposals',
+                        'Elixir.LoanAnalysis.Warranty']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {mod,{'Elixir.LoanAnalysis.Application',[]}}]}.
