@@ -6,30 +6,21 @@ defmodule LoanAnalysis.Proposal do
     loan_value: 0,
     number_of_monthly_installments: 0,
     warranties: %{},
-    proponents: %{}
+    proponents: %{},
   )
 
-  def validate(proposal_id) do
-    proposal_id
-    |> ProposalsStore.get()
-    |> do_validate()
-  end
-
-  defp do_validate(proposal = %Proposal{}) do
+  def validate?(proposal = %Proposal{}) do
     # O valor do empréstimo deve estar entre R$ 30.000,00 e R$ 3.000.000,00
     # O empréstimo deve ser pago em no mínimo 2 anos e no máximo 15 anos
-
-    if proposal.loan_value > 30000 && proposal.loan_value < 3_000_000 &&
+    monthly_installment_value = proposal.loan_value / proposal.number_of_monthly_installments
+    if proposal.loan_value > 30_000 && proposal.loan_value < 3_000_000 &&
          proposal.number_of_monthly_installments >= 24 &&
          proposal.number_of_monthly_installments <= 180 &&
          Warranty.validate(Map.values(proposal.warranties), proposal.loan_value) == :ok &&
-         Proponent.validate(
-           Map.values(proposal.proponents),
-           proposal.loan_value / proposal.number_of_monthly_installments
-         ) == :ok do
-      :ok
+         Proponent.validate(Map.values(proposal.proponents), monthly_installment_value) == :ok do
+          {:ok, true}
     else
-      {:error, "proposal invalid"}
+      {:error, false}
     end
   end
 
@@ -53,13 +44,14 @@ defmodule LoanAnalysis.Proposal do
     %{proposal | warranties: Map.put(proposal.warranties, warranty.id, warranty)}
   end
 
-  def remove_warranty(event = %Event{schema: "warranty"}) do
+  def remove_warranty(event = %Event{schema: "warranty", action: "removed"}) do
     data = event.data
     [proposal_id | data] = data
     [warranty_id | _data] = data
 
     proposal = ProposalsStore.get(proposal_id)
-    %{proposal | warranties: Map.pop(proposal.warranties, warranty_id)}
+    {_removed_warranty, new_warranties} = Map.pop(proposal.warranties, warranty_id)
+    %{proposal | warranties: new_warranties}
   end
 
   def add_proponent(event = %Event{schema: "proponent"}) do
@@ -69,12 +61,13 @@ defmodule LoanAnalysis.Proposal do
     %{proposal | proponents: Map.put(proposal.proponents, proponent.id, proponent)}
   end
 
-  def remove_proponent(event = %Event{schema: "proponent"}) do
+  def remove_proponent(event = %Event{schema: "proponent", action: "removed"}) do
     data = event.data
     [proposal_id | data] = data
     [proponent_id | _data] = data
 
     proposal = ProposalsStore.get(proposal_id)
-    %{proposal | proponents: Map.pop(proposal.proponents, proponent_id)}
+    {_removed_proposal, new_proposals} = Map.pop(proposal.proponents, proponent_id)
+    %{proposal | proponents: new_proposals}
   end
 end

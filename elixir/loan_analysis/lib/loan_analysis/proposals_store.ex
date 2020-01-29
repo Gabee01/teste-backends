@@ -14,7 +14,18 @@ defmodule LoanAnalysis.ProposalsStore do
     proposal
   end
 
-  def delete(id) do
-    Agent.get_and_update(__MODULE__, &Map.pop(&1, id))
+  # def delete(id) do
+  #   Agent.get_and_update(__MODULE__, fn state ->
+  #     {_removed, new_map} = Map.pop(state, id)
+  #     new_map
+  #   end)
+  # end
+
+  def all() do
+    Agent.get(__MODULE__, fn proposal -> proposal end)
+  end
+
+  def clear() do
+    Agent.update(__MODULE__, fn state -> %{} end)
   end
 end

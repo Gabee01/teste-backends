@@ -15,6 +15,14 @@ defmodule LoanAnalysis.EventsStore do
     event
   end
 
+  def all() do
+    Agent.get(__MODULE__, fn proposal -> proposal end)
+  end
+
+  def clear() do
+    Agent.update(__MODULE__, fn state -> %{} end)
+  end
+
   # def delete(bucket, key) do
   #   Agent.get_and_update(bucket, &Map.pop(&1, key))
   # end

@@ -1,5 +1,6 @@
 defmodule LoanAnalysis do
-  alias LoanAnalysis.Proposal
+  # alias LoanAnalysis.Proposal
+  # def show_valids(proposals) do
 
-  defdelegate validate_proposal(proposal_id), to: Proposal, as: :validate
+  # end
 end

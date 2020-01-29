@@ -23,17 +23,17 @@ defmodule LoanAnalysis.Warranty do
     }
   end
 
-  def validate([], loan_value), do: {:error, "no warranties"}
+  def validate([], _), do: {:error, "no warranties"}
 
   def validate(proposal_warranties, loan_value) do
     # As garantias de imóvel dos estados PR, SC e RS não são aceitas
     # Dever haver no mínimo 1 garantia de imóvel por proposta
     # A soma do valor das garantias deve ser maior ou igual ao dobro do valor do empréstimo
-    if Enum.count(
+    if Enum.empty?(
          Enum.filter(proposal_warranties, fn warranty ->
            Enum.member?(["PR", "SC", "RS"], warranty.province)
          end)
-       ) == 0 && Enum.count(proposal_warranties) >= 1 &&
+       ) && Enum.count(proposal_warranties) >= 1 &&
          sum_values(proposal_warranties) >= 2 * loan_value do
       :ok
     else

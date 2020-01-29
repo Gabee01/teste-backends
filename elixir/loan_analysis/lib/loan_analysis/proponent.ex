@@ -38,32 +38,35 @@ defmodule LoanAnalysis.Proponent do
 
     # Deve haver no mínimo 2 proponentes por proposta
     # Deve haver exatamente 1 proponente principal por proposta
-    # Todos os proponentes devem ser maiores de 18 anos
+    # T odos os proponentes devem ser maiores de 18 anos
     if Enum.count(proposal_proponents) >= 2 && Enum.count(main_proponents) == 1 &&
-         Enum.count(Enum.filter(proposal_proponents, fn proponent -> proponent.age < 18 end)) == 0 do
+         Enum.empty?(Enum.filter(proposal_proponents, fn proponent -> proponent.age < 18 end)) do
       # A renda do proponente principal deve ser pelo menos:
       #     4 vezes o valor da parcela do empréstimo, se a idade dele for entre 18 e 24 anos
       #     3 vezes o valor da parcela do empréstimo, se a idade dele for entre 24 e 50 anos
       #     2 vezes o valor da parcela do empréstimo, se a idade dele for acima de 50 anos
       main_proponent = hd(main_proponents)
 
-      minimal_income =
-        cond do
-          main_proponent.age >= 18 && main_proponent.age < 24 ->
-            4 * loan_installment_value
-
-          main_proponent.age >= 24 && main_proponent.age < 50 ->
-            3 * loan_installment_value
-
-          main_proponent.age >= 50 ->
-            2 * loan_installment_value
-        end
+      minimal_income = calculate_minimal_income(main_proponent, loan_installment_value)
 
       if main_proponent.monthly_income >= minimal_income do
         :ok
       end
     else
       {:error, "invalid proponents"}
+    end
+  end
+
+  def calculate_minimal_income(main_proponent, loan_installment_value) do
+    cond do
+      main_proponent.age >= 18 && main_proponent.age < 24 ->
+        4 * loan_installment_value
+
+      main_proponent.age >= 24 && main_proponent.age < 50 ->
+        3 * loan_installment_value
+
+      main_proponent.age >= 50 ->
+        2 * loan_installment_value
     end
   end
 end

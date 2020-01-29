@@ -9,7 +9,7 @@ defmodule LoanAnalysis.Application do
     # List all child processes to be supervised
     children = [
       # Starts a worker by calling: LoanAnalysis.Worker.start_link(arg)
-      # {LoanAnalysis.Worker, arg},
+      {LoanAnalysis.Worker, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
