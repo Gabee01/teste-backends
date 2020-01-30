@@ -9,12 +9,14 @@ defmodule LoanAnalysis.Application do
     # List all child processes to be supervised
     children = [
       # Starts a worker by calling: LoanAnalysis.Worker.start_link(arg)
-      {LoanAnalysis.Worker, []},
+      {LoanAnalysis.Event.EventWorker, []},
+      {LoanAnalysis.Proposal.ProposalValidationWorker, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: LoanAnalysis.Supervisor]
     Supervisor.start_link(children, opts)
+    |> IO.inspect()
   end
 end

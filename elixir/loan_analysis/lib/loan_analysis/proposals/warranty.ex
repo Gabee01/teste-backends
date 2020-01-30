@@ -1,5 +1,6 @@
-defmodule LoanAnalysis.Warranty do
-  alias LoanAnalysis.{Event, Warranty}
+defmodule LoanAnalysis.Proposal.Warranty do
+  alias LoanAnalysis.Proposal.Warranty
+  alias LoanAnalysis.Event.Event
 
   defstruct(
     proposal_id: "",

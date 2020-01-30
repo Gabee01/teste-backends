@@ -1,6 +1,4 @@
 defmodule LoanAnalysis do
-  # alias LoanAnalysis.Proposal
-  # def show_valids(proposals) do
-
-  # end
+  alias LoanAnalysis.Event.EventWorker
+  defdelegate test_solution(), to: EventWorker, as: :test_all_files
 end

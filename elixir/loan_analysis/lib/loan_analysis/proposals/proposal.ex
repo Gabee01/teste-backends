@@ -1,13 +1,26 @@
-defmodule LoanAnalysis.Proposal do
-  alias LoanAnalysis.{Event, ProposalsStore, Warranty, Proponent, Proposal}
+defmodule LoanAnalysis.Proposal.Proposal do
+  alias LoanAnalysis.Proposal.{ProposalsStore, Warranty, Proponent, Proposal}
+  alias LoanAnalysis.Event.Event
 
   defstruct(
     id: "",
     loan_value: 0,
     number_of_monthly_installments: 0,
     warranties: %{},
-    proponents: %{},
+    proponents: %{}
   )
+
+  def get_valids(proposals) do
+    proposals
+    |> Map.values()
+    |> Enum.reduce([], fn (proposal, valid_proposals) ->
+        if Proposal.validate?(proposal) do
+          valid_proposals ++ [proposal.id]
+        else
+          valid_proposals
+        end
+    end)
+  end
 
   def validate?(proposal = %Proposal{}) do
     # O valor do empréstimo deve estar entre R$ 30.000,00 e R$ 3.000.000,00
@@ -18,9 +31,9 @@ defmodule LoanAnalysis.Proposal do
          proposal.number_of_monthly_installments <= 180 &&
          Warranty.validate(Map.values(proposal.warranties), proposal.loan_value) == :ok &&
          Proponent.validate(Map.values(proposal.proponents), monthly_installment_value) == :ok do
-          {:ok, true}
+          true
     else
-      {:error, false}
+      false
     end
   end
 

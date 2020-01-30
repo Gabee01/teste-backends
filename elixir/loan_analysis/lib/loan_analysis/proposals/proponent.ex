@@ -1,5 +1,6 @@
-defmodule LoanAnalysis.Proponent do
-  alias LoanAnalysis.{Event, Proponent}
+defmodule LoanAnalysis.Proposal.Proponent do
+  alias LoanAnalysis.Proposal.Proponent
+  alias LoanAnalysis.Event.Event
 
   defstruct(
     proposal_id: "",
